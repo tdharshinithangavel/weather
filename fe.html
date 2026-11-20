@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Fetch City Coordinates</title>
+
+<style>
+body {
+    font-family: Arial;
+    background-color: red;
+    text-align: center;
+    padding: 50px;
+}
+
+h1 {
+    color: navy;
+}
+
+input {
+    padding: 10px;
+    width: 220px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: navy;
+    color: white;
+    border: none;
+}
+
+#result {
+    background-color: white;
+    margin: 20px auto;
+    padding: 15px;
+    width: 300px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Fetch City Coordinates</h1>
+
+<input type="text" id="in" placeholder="Enter city name">
+<button onclick="getdts()">Search</button>
+
+<div id="result"></div>
+
+<script>
+function getdts() {
+    var city = document.getElementById("in").value;
+
+    fetch("https://geocoding-api.open-meteo.com/v1/search?name=" + encodeURIComponent(city) + "&count=5&language=en&format=json")
+    .then(response => response.json())
+    .then(data => {
+        if (data.results && data.results.length > 0) {
+            let location = data.results[0];
+
+            document.getElementById("result").innerHTML =
+            "<h3>" + location.name + "</h3>" +
+            "<p>Latitude: " + location.latitude + "</p>" +
+            "<p>Longitude: " + location.longitude + "</p>" +
+            "<p>Country: " + location.country + "</p>";
+        } else {
+            document.getElementById("result").innerHTML = "City not found";
+        }
+    })
+    .catch(error => {
+        document.getElementById("result").innerHTML = "Error fetching data";
+    });
+}
+</script>
+
+</body>
+</html>
